@@ -1,6 +1,6 @@
 node{
     stage('checkout Scm'){
-    git credentialsId: 'LahbiziSafae', url: 'https://github.com/LahbiziSafae/web-app-Docker'    }
+    git credentialsId: 'gitcredentials', url: 'https://github.com/LahbiziSafae/web-app-Docker'    }
     
     stage('build docker image'){
     sh 'docker build -t safaelah/my-app:2.0.0 .'
@@ -12,6 +12,6 @@ node{
     sh 'docker push safaelah/my-app:2.0.0'
     }
     stage('Run Container on Dev Server'){
-    sh 'docker run -p 8082:5000 -d --name my-app-python4 safaelah/my-app:2.0.0'
+    sh 'docker run -p 80:5000 -d --name my-app-python2 safaelah/my-app:2.0.0'
    }
 }
