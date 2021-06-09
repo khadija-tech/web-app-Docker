@@ -12,6 +12,6 @@ node{
     sh 'docker push safaelah/my-app:2.0.0'
     }
     stage('Run Container on Dev Server'){
-    sh 'docker run -p 80:5000 -d --name my-app-python2 safaelah/my-app:2.0.0'
+    sh 'docker run -p 8888:5000 -d --name my-app-python7 safaelah/my-app:2.0.0'
    }
 }
