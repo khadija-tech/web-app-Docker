@@ -4,7 +4,10 @@ properties([
 string(name: 'justification', defaultValue: 'Justification', description: 'The justification for deploying')
 ])
 ])
-node{
+
+node () {
+timestamps {
+    try {
     stage('checkout Scm'){
     git credentialsId: 'LahbiziSafae', url: 'https://github.com/LahbiziSafae/web-app-Docker'    }
     
@@ -20,4 +23,15 @@ node{
     stage('Run Container on Dev Server'){
     sh 'docker run -p 8082:5000 -d --name my-app-python4 safaelah/my-app:2.0.0'
    }
+     } catch(e) {
+            throw e;
+        } finally {
+            try{
+                //check
+            } catch(ex) {
+                println(ex.toString());
+            }
+        }
+    }
 }
+
