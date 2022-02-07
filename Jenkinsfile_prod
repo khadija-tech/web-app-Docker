@@ -1,50 +1,17 @@
-properties([
-    parameters([
-        validatingString(name: 'version', regex: '\\b?[v][0-9]+\\.[0-9]+\\.[0-9]+(?:\\.[0-9]+)?\\b', failedValidationMessage:  'Version :  vX.Y.Z with X = n° release ; Y = n° sprint ;  Z = n° fix', defaultValue: '0.0.0', description: 'Version :  vX.Y.Z with X = n° release ; Y = n° sprint ;  Z = n° fix'),
-string(name: 'justification', defaultValue: 'Justification', description: 'The justification for deploying')
-])
-])
-
-node () {
+node{
+    stage('checkout Scm'){
+    git credentialsId: 'LahbiziSafae', url: 'https://github.com/LahbiziSafae/web-app-Docker'    }
     
-
-    timestamps {
-    try {
-            // Checkout
-            stageCheckout()
-            stage('build docker image'){
-            sh 'docker build -t safaelah/my-app:2.0.0 .'}
-
-            stage('push docker image'){
-            withCredentials([string(credentialsId: 'psswd', variable: 'dockerhubpsswd')]) {
-            sh "docker login -u safaelah -p ${dockerhubpsswd}" }
-            sh 'docker push safaelah/my-app:2.0.0'}
-
-            stage('Run Container on Dev Server'){
-            sh 'docker run -p 8082:5000 -d --name my-app-python4 safaelah/my-app:2.0.0'}
-
-            
-
-
-        } catch(e) {
-            throw e;
-        } finally {
-            try{
-                //check
-            } catch(ex) {
-                println(ex.toString());
-            }
-        }
+    stage('build docker image'){
+    sh 'docker build -t safaelah/my-app:2.0.0 .'
     }
-}
-
-
-////////////////////////////////////
-// GIT PULL FOR JENKINS
-///////////////////////////////////
-def stageCheckout() {
-    stage('Checkout') {
-        deleteDir()
-        checkout scm
+    stage('push docker image'){
+    withCredentials([string(credentialsId: 'psswd', variable: 'dockerhubpsswd')]) {
+         sh "docker login -u safaelah -p ${dockerhubpsswd}"
+      }
+    sh 'docker push safaelah/my-app:2.0.0'
     }
+    stage('Run Container on Dev Server'){
+    sh 'docker run -p 8083:5000 -d --name my-app-python5 safaelah/my-app:2.0.0'
+   }
 }
